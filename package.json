@@ -1,0 +1,20 @@
+{
+  "name": "bknd",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev",
+    "bknd-typegen": "PROXY=1 npx bknd types",
+    "typegen": "wrangler types && npm run bknd-typegen",
+    "predev": "npm run typegen"
+  },
+  "dependencies": {
+    "bknd": "0.19.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.2",
+    "wrangler": "^4.34.0"
+  }
+}
