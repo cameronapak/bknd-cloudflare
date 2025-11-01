@@ -9,7 +9,7 @@
 	"workers_dev": true,
 	"minify": true,
 	"assets": {
-		"directory": "node_modules/bknd/dist/static"
+		"directory": "./dist"
 	},
 	"observability": {
 		"enabled": true
