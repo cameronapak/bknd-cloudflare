@@ -20,6 +20,7 @@
   },
   "exclude": ["test"],
   "include": [
+    "index.d.ts",
     "worker-configuration.d.ts",
     "bknd-types.d.ts",
     "bknd.config.ts",

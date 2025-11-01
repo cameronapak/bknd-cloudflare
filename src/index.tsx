@@ -7,9 +7,9 @@ export default serve({
   onBuilt: async (app) => {
     /** Metadata Hoisting @see https://hono.dev/docs/guides/jsx#metadata-hoisting */
     app.server.use('*', async (c, next) => {
-      c.setRenderer((content) => {
+      c.setRenderer((content, head) => {
         return c.html(
-          <Layout>
+          <Layout title={head.title} description={head.description}>
             {content}
           </Layout>
         )
@@ -17,12 +17,14 @@ export default serve({
       await next()
     })
 
-    app.server.get("/", (c) => c.render(
+    app.server.get("/", (c) => c.render((
       <>
-        <title>Home</title>
-        <meta name='description' content='This is the home page.' />
         <h1>Hello World</h1>
+        <p>This is the home page</p>
       </>
-    )); 
+    ), {
+      title: 'Home',
+      description: 'This is the home page.',
+    })); 
   },
 });
