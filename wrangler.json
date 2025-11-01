@@ -16,7 +16,7 @@
 	},
 	"d1_databases": [
 		{
-			"binding": "bknd_nov_2025",
+			"binding": "bknd_nov_2025_d1",
 			"database_name": "bknd-nov-2025",
 			"database_id": "300c8e44-d739-4096-8c6f-56ec34e0e952",
 			"remote": true
@@ -25,7 +25,7 @@
 	"r2_buckets": [
 		{
 			"bucket_name": "bknd-nov-2025",
-			"binding": "bknd_nov_2025",
+			"binding": "bknd_nov_2025_r2",
 			"remote": true
 		}
 	]
