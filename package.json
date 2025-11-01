@@ -6,9 +6,9 @@
   "scripts": {
     "deploy": "wrangler deploy",
     "dev": "concurrently \"bun run watch:css\" \"wrangler dev\"",
-    "bknd-typegen": "PROXY=1 bunx bknd types",
-    "typegen": "wrangler types && bun run bknd-typegen",
+    "typegen": "wrangler types && bun run bknd:typegen",
     "predev": "concurrently \"bun run bknd:copy-assets\" \"bun run typegen\"",
+    "bknd:typegen": "PROXY=1 bunx bknd types",
     "bknd:copy-assets": "bunx bknd copy-assets --out dist --clean",
     "build:css": "tailwindcss -i ./src/styles/global.css -o ./dist/styles/global.css",
     "watch:css": "tailwindcss -i ./src/styles/global.css -o ./dist/styles/global.css --watch"
