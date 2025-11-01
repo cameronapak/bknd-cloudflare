@@ -1,20 +1,28 @@
 /** @jsxImportSource hono/jsx */
 import { Prose } from '../components/prose'
+import { Api } from "bknd/client";
 
-export function Home() {
+export async function Home() {
+  const api = new Api({
+    host: "http://localhost:8787",
+  });
+  const todos = await api.data.readMany("todos");
+
   return (
     <section class="m-6">
       <Prose>
         <h1>Garlic bread with cheese: What the science tells us</h1>
-        <p>
-          For years parents have espoused the health benefits of eating garlic bread with cheese to their
-          children, with the food earning such an iconic status in our culture that kids will often dress
-          up as warm, cheesy loaf for Halloween.
-        </p>
-        <p>
-          But a recent study shows that the celebrated appetizer may be linked to a series of rabies cases
-          springing up around the country.
-        </p>
+        <ol>
+          {todos.map((todo) => (
+            <li key={todo.id} class="flex items-center gap-2">
+              <input
+                type="checkbox"
+                class="checkbox checkbox-primary"
+              />
+              <span>{todo.title}</span>
+            </li>
+          ))}
+        </ol>
         <a href="/admin" class="btn btn-primary">Admin</a>
       </Prose>
     </section>
