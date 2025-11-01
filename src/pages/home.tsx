@@ -1,5 +1,4 @@
 /** @jsxImportSource hono/jsx */
-import { Todos } from '../../bknd-types';
 import { Prose } from '../components/prose'
 import { Api } from "bknd/client";
 
@@ -12,7 +11,7 @@ export async function Home() {
   return (
     <section class="m-6">
       <Prose>
-        <h1>Garlic bread with cheese: What the science tells us</h1>
+        <h1>Todo</h1>
         <ol>
           {!("error" in todos) && (todos ?? [])?.map((todo) => (
             <li key={todo.id} class="flex items-center gap-2">
