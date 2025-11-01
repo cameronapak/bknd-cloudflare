@@ -18,9 +18,13 @@ export default serve({
       await next()
     })
 
-    app.server.get("/", (c) => c.render(<Home />, {
-      title: 'Home',
-      description: 'This is the home page.',
-    })); 
+    app.server.get("/", async(c) => {
+      const url = new URL(c.req.url);
+      const host = url.origin;
+      return c.render(<Home host={host} />, {
+        title: 'Home',
+        description: 'This is the home page.',
+      });
+    }); 
   },
 });

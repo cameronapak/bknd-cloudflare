@@ -2,18 +2,18 @@
 import { Prose } from '../components/prose'
 import { Api } from "bknd/client";
 
-export async function Home() {
+export async function Home({ host }: { host: string }) {
   const api = new Api({
-    host: "http://localhost:8787",
+    host,
   });
   const todos = await api.data.readMany("todos");
 
   return (
     <section class="m-6">
       <Prose>
-        <h1>Todo</h1>
+        <h1>Todos</h1>
         <ol>
-          {!("error" in todos) && (todos ?? [])?.map((todo) => (
+          {!("error" in todos) && Array.isArray(todos) && (todos || [])?.map((todo) => (
             <li key={todo.id} class="flex items-center gap-2">
               <input
                 type="checkbox"
