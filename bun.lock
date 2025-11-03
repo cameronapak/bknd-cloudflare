@@ -4,6 +4,7 @@
     "": {
       "name": "bknd",
       "dependencies": {
+        "@starfederation/datastar-sdk": "^1.0.0-RC.1",
         "bknd": "0.19.0",
       },
       "devDependencies": {
@@ -359,6 +360,8 @@
     "@sindresorhus/is": ["@sindresorhus/is@7.1.1", "", {}, "sha512-rO92VvpgMc3kfiTjGT52LEtJ8Yc5kCWhZjLQ3LwlA4pSgPpQO7bVpYXParOD8Jwf+cVQECJo3yP/4I8aZtUQTQ=="],
 
     "@speed-highlight/core": ["@speed-highlight/core@1.2.8", "", {}, "sha512-IGytNtnUnPIobIbOq5Y6LIlqiHNX+vnToQIS7lj6L5819C+rA8TXRDkkG8vePsiBOGcoW9R6i+dp2YBUKdB09Q=="],
+
+    "@starfederation/datastar-sdk": ["@starfederation/datastar-sdk@1.0.0-RC.1", "", {}, "sha512-IaFqEeTxfFguPm5QFPCrg4mQx7BT5P5LIVPR+XMKztY/rtH/iW9K/D2A3BlEx7WD75ukKlfoLfuaqXlj7GB9/A=="],
 
     "@tailwindcss/cli": ["@tailwindcss/cli@4.1.16", "", { "dependencies": { "@parcel/watcher": "^2.5.1", "@tailwindcss/node": "4.1.16", "@tailwindcss/oxide": "4.1.16", "enhanced-resolve": "^5.18.3", "mri": "^1.2.0", "picocolors": "^1.1.1", "tailwindcss": "4.1.16" }, "bin": { "tailwindcss": "dist/index.mjs" } }, "sha512-dsnANPrh2ZooHyZ/8uJhc9ecpcYtufToc21NY09NS9vF16rxPCjJ8dP7TUAtPqlUJTHSmRkN2hCdoYQIlgh4fw=="],
 
