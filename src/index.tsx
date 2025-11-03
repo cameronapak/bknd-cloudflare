@@ -1,8 +1,18 @@
 import { serve } from "bknd/adapter/cloudflare";
+import type { Context } from "hono";
+import { Api } from "bknd/client";
 import config from "../config";
 import { Layout } from "./layouts";
 import { Home } from "./pages/home";
-import type { Context } from "hono";
+
+function getBkndApi(c: Context) {
+  const url = new URL(c.req.url);
+  const host = url.origin;
+  return new Api({
+    host,
+    request: c.req.raw,
+  });
+}
 
 export default serve({
   ...config,
@@ -20,9 +30,10 @@ export default serve({
     })
 
     app.server.get("/", async(c: Context) => {
-      const url = new URL(c.req.url);
-      const host = url.origin;
-      return c.render(<Home host={host} />, {
+      const api = getBkndApi(c);
+      const todos = await api.data.readMany("todos");
+
+      return c.render(<Home todos={todos} />, {
         title: 'Home',
         description: 'This is the home page.',
       });
