@@ -6,6 +6,11 @@ import { Layout } from "./layouts";
 import { Home } from "./pages/home";
 import { App } from "bknd";
 
+/**
+ * The Api class is the main entry point for interacting with the bknd API.
+ * 
+ * @see https://docs.bknd.io/usage/sdk/#using-a-local-api
+ */
 function getBkndApi(app: App, c: Context) {
   return new Api({
     fetcher: app.server.request as typeof fetch,
