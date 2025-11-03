@@ -4,7 +4,8 @@ A minimal Cloudflare Workers project with bknd integration.
 ## Tech Stack
 
 This project uses:
-- **Hono.jsx** - JSX components for server-side rendering
+- **Bknd.io** - bknd is a lightweight, infrastructure agnostic and feature-rich backend that runs in any JavaScript environment.
+- **Hono** - Hono web server and Hono JSX components for server-side rendering
 - **DataStar** - Progressive enhancement with HTML attributes for interactivity
 - **Tailwind CSS** - Utility-first CSS framework
 - **DaisyUI** - Tailwind component library
