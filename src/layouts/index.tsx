@@ -12,6 +12,8 @@ export const Layout: FC<{ children: any, title: string, description: string }> =
       <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Code:ital,wght@0,300..800;1,300..800&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet" />
       <meta name='description' content={description} />
       <link href="./styles/global.css" rel="stylesheet" />
+      {/** @see https://data-star.dev/guide/getting_started#installation */}
+      <script type="module" src="https://cdn.jsdelivr.net/gh/starfederation/datastar@1.0.0-RC.6/bundles/datastar.js"></script>
     </head>
     <body>
       {children}
