@@ -4,12 +4,11 @@ import { Api } from "bknd/client";
 import config from "../config";
 import { Layout } from "./layouts";
 import { Home } from "./pages/home";
+import { App } from "bknd";
 
-function getBkndApi(c: Context) {
-  const url = new URL(c.req.url);
-  const host = url.origin;
+function getBkndApi(app: App, c: Context) {
   return new Api({
-    host,
+    fetcher: app.server.request as typeof fetch,
     request: c.req.raw,
   });
 }
@@ -30,7 +29,7 @@ export default serve({
     })
 
     app.server.get("/", async(c: Context) => {
-      const api = getBkndApi(c);
+      const api = getBkndApi(app, c);
       const todos = await api.data.readMany("todos");
 
       return c.render(<Home todos={todos} />, {
