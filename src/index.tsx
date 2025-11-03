@@ -1,10 +1,12 @@
 import { serve } from "bknd/adapter/cloudflare";
 import type { Context } from "hono";
 import { Api } from "bknd/client";
+import { App } from "bknd";
+import { ServerSentEventGenerator } from "@starfederation/datastar-sdk/web";
+
 import config from "../config";
 import { Layout } from "./layouts";
 import { Home } from "./pages/home";
-import { App } from "bknd";
 
 /**
  * The Api class is the main entry point for interacting with the bknd API.
@@ -41,6 +43,34 @@ export default serve({
         title: 'Home',
         description: 'This is the home page.',
       });
-    }); 
+    });
+
+    app.server.post("/todos", async(c: Context) => {
+      const api = getBkndApi(app, c);
+      const body = await c.req.parseBody();
+      const title = body.title as string;
+      if (!title) {
+        return c.json({ error: "Title is required" }, 400);
+      }
+
+      const todo = await api.data.createOne("todos", { title });
+
+      return ServerSentEventGenerator.stream(async (stream) => {
+        const todoElement = `<li id="todo-${todo.id}" class="flex items-center gap-2">
+          <input type="checkbox" class="checkbox checkbox-primary" />
+          <span>${todo.title}</span>
+        </li>`;
+        
+        stream.patchElements(todoElement, {
+          selector: "#todos-list",
+          mode: "append",
+        });
+        
+        stream.patchElements('<input data-init="el.focus()" type="text" name="title" placeholder="Add a todo..." class="input input-bordered flex-1" required value="" />', {
+          selector: 'input[name="title"]',
+          mode: "replace",
+        });
+      });
+    });
   },
 });

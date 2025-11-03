@@ -6,9 +6,21 @@ export function Home({ todos = [] }: { todos?: BkndEntity<"todos">[] | undefined
     <section class="m-6">
       <Prose>
         <h1>Todos</h1>
-        <ol>
+        <form data-on:submit="@post('/todos', {contentType: 'form'})" class="mb-4">
+          <div class="flex gap-2">
+            <input
+              type="text"
+              name="title"
+              placeholder="Add a todo..."
+              class="input input-bordered flex-1"
+              required
+            />
+            <button type="submit" class="btn btn-primary">Add</button>
+          </div>
+        </form>
+        <ol id="todos-list">
           {!("error" in todos) && Array.isArray(todos) && (todos || [])?.map((todo) => (
-            <li key={todo.id} class="flex items-center gap-2">
+            <li key={todo.id} id={`todo-${todo.id}`} class="flex items-center gap-2">
               <input
                 type="checkbox"
                 class="checkbox checkbox-primary"
@@ -18,6 +30,7 @@ export function Home({ todos = [] }: { todos?: BkndEntity<"todos">[] | undefined
           ))}
         </ol>
         <a href="/admin" class="btn btn-primary">Admin</a>
+        <button data-on:click="alert('I'm sorry, Dave. I'm afraid I can't do that.')" class="btn btn-secondary">Click me</button>
       </Prose>
     </section>
   )
