@@ -64,6 +64,13 @@ export default serve({
           <li id={`todo-${todo.id}`} class="not-prose flex items-center gap-2"  >
             <input type="checkbox" class="checkbox checkbox-primary" />
             <span>{todo.title}</span>
+            <button
+              data-on:click={`@delete('/todos/${todo.id}')`}
+              class="btn btn-square btn-ghost"
+              type="button"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x-icon lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </button>
           </li>
         ).toString(), {
           selector: "#todos-list",
@@ -116,6 +123,20 @@ export default serve({
             mode: "replace",
           }
         );
+      });
+    });
+
+    app.server.delete("/todos/:id", async (c: Context) => {
+      const api = getBkndApi(app, c);
+      const id = c.req.param("id");
+
+      await api.data.deleteOne("todos", id);
+
+      return ServerSentEventGenerator.stream(async (stream) => {
+        stream.patchElements("", {
+          selector: `#todo-${id}`,
+          mode: "remove",
+        });
       });
     });
   },
