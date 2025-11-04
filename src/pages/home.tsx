@@ -24,6 +24,7 @@ export function Home({ todos = [] }: { todos?: BkndEntity<"todos">[] | undefined
               <input
                 type="checkbox"
                 class="checkbox checkbox-primary"
+                checked={!!todo.completed_datetime}
               />
               <span>{todo.title}</span>
             </li>
