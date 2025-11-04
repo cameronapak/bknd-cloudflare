@@ -53,20 +53,29 @@ export default serve({
         return c.json({ error: "Title is required" }, 400);
       }
 
-      const todo = await api.data.createOne("todos", { title });
+      const todo = await api.data.createOne("todos", { title, created_datetime: new Date() });
 
-      return ServerSentEventGenerator.stream(async (stream) => {
-        const todoElement = `<li id="todo-${todo.id}" class="flex items-center gap-2">
-          <input type="checkbox" class="checkbox checkbox-primary" />
-          <span>${todo.title}</span>
-        </li>`;
-        
-        stream.patchElements(todoElement, {
+      return ServerSentEventGenerator.stream(async (stream) => {        
+        stream.patchElements((
+          <li id={`todo-${todo.id}`} class="flex items-center gap-2">
+            <input type="checkbox" class="checkbox checkbox-primary" />
+            <span>{todo.title}</span>
+          </li>
+        ).toString(), {
           selector: "#todos-list",
           mode: "append",
         });
         
-        stream.patchElements('<input data-init="el.focus()" type="text" name="title" placeholder="Add a todo..." class="input input-bordered flex-1" required value="" />', {
+        stream.patchElements((
+          <input 
+            data-init="el.focus()" 
+            type="text" 
+            name="title" 
+            placeholder="Add a todo..." 
+            class="input input-bordered flex-1" 
+            required 
+            value="" />
+        ).toString(), {
           selector: 'input[name="title"]',
           mode: "replace",
         });
