@@ -37,7 +37,10 @@ export default serve({
 
     app.server.get("/", async(c: Context) => {
       const api = getBkndApi(app, c);
-      const todos = await api.data.readMany("todos");
+      const todos = await api.data.readMany("todos", {
+        limit: 100,
+        sort: "-created_datetime",
+      });
 
       return c.render(<Home todos={todos} />, {
         title: 'Home',
@@ -56,6 +59,7 @@ export default serve({
       const todo = await api.data.createOne("todos", { title, created_datetime: new Date() });
 
       return ServerSentEventGenerator.stream(async (stream) => {        
+        // Add new todo to the top of the list
         stream.patchElements((
           <li id={`todo-${todo.id}`} class="flex items-center gap-2">
             <input type="checkbox" class="checkbox checkbox-primary" />
@@ -63,15 +67,15 @@ export default serve({
           </li>
         ).toString(), {
           selector: "#todos-list",
-          mode: "append",
+          mode: "prepend",
         });
         
         stream.patchElements((
-          <input 
+          <input
             data-init="el.focus()" 
             type="text" 
             name="title" 
-            placeholder="Add a todo..." 
+            placeholder="Add another todo..." 
             class="input input-bordered flex-1" 
             required 
             value="" />
