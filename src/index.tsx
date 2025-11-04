@@ -7,6 +7,7 @@ import { ServerSentEventGenerator } from "@starfederation/datastar-sdk/web";
 import config from "../config";
 import { Layout } from "./layouts";
 import { Home } from "./pages/home";
+import { Todo } from "./components/todo";
 
 /**
  * The Api class is the main entry point for interacting with the bknd API.
@@ -61,25 +62,7 @@ export default serve({
       return ServerSentEventGenerator.stream(async (stream) => {        
         // Add new todo to the top of the list
         stream.patchElements((
-          <form key={todo.id}>
-            <li id={`todo-${todo.id}`} class="not-prose flex items-center gap-2"  >
-              <input
-                type="checkbox"
-                name="completed"
-                data-on:change={`@put('/todos/${todo.id}', {contentType: 'form'})`}
-                class="checkbox checkbox-primary"
-                checked={!!todo.completed_datetime}
-              />
-              <span>{todo.title}</span>
-              <button
-                data-on:click={`@delete('/todos/${todo.id}')`}
-                class="btn btn-square btn-ghost"
-                type="button"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x-icon lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-              </button>
-            </li>
-          </form>
+          <Todo todo={todo} class="not-prose flex items-center gap-2" />
         ).toString(), {
           selector: "#todos-list",
           mode: "prepend",
@@ -115,16 +98,7 @@ export default serve({
       return ServerSentEventGenerator.stream(async (stream) => {
         stream.patchElements(
           (
-            <li id={`todo-${todo.id}`} class="flex items-center gap-2">
-              <input
-                type="checkbox"
-                name="completed"
-                data-on:change={`@put('/todos/${todo.id}', {contentType: 'form'})`}
-                class="checkbox checkbox-primary"
-                checked={!!todo.completed_datetime}
-              />
-              <span>{todo.title}</span>
-            </li>
+            <Todo todo={todo} />
           ).toString(),
           {
             selector: `#todo-${id}`,
