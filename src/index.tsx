@@ -93,17 +93,20 @@ export default serve({
       const body = await c.req.parseBody();
       const completed = body.completed === "on" || body.completed === "true";
       const todo = await api.data.updateOne("todos", id, {
-        completed_datetime: completed ? new Date() : undefined,
+        // @ts-ignore - I want to send null here, which is entirely valid
+        completed_datetime: completed ? new Date() : null,
       });
 
       return ServerSentEventGenerator.stream(async (stream) => {
         stream.patchElements(
           (
-            <li id={`todo-${id}`} class="flex items-center gap-2">
+            <li id={`todo-${todo.id}`} class="flex items-center gap-2">
               <input
                 type="checkbox"
+                name="completed"
+                data-on:change={`@put('/todos/${todo.id}', {contentType: 'form'})`}
                 class="checkbox checkbox-primary"
-                checked={!!completed}
+                checked={!!todo.completed_datetime}
               />
               <span>{todo.title}</span>
             </li>
