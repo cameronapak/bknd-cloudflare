@@ -1,128 +1,64 @@
 # AGENTS.md
 
-## Setup commands
+## Project Snapshot
 
-- Install deps: `bun install`
-- Start dev server: `bun run dev` (runs CSS watch + wrangler dev)
-- Generate types: `bun run typegen` (generates both wrangler and bknd types)
+Simple single project: bknd.io backend framework + Cloudflare Workers + Hono JSX frontend. Tailwind CSS v4 + DaisyUI for styling. DataStar for progressive enhancement. TypeScript strict mode. See [src/AGENTS.md](src/AGENTS.md) for detailed source code patterns.
+
+## Root Setup Commands
+
+- Install: `bun install`
+- Dev server: `bun run dev` (runs CSS watch + wrangler dev concurrently)
 - Build CSS: `bun run build:css`
+- Type generation: `bun run typegen` (generates wrangler + bknd types)
 - Deploy: `bun run deploy`
+- No test suite configured
 
-## Tech stack
+## Universal Conventions
 
-- **bknd.io** - Backend framework, configured in `config.ts`
-- **Hono** - Web server with JSX components (not React)
-- **DataStar** - Progressive enhancement via HTML attributes
-- **Tailwind CSS v4** - CSS framework configured in `src/styles/global.css`
-- **DaisyUI** - Component library with custom "cam" theme
-- **Cloudflare Workers** - Runtime platform
-- **bun** - Package manager and runtime
+- **JSX**: Always include `/** @jsxImportSource hono/jsx */` pragma at top of `.tsx` files
+- **JSX attributes**: Use `class` not `className` (Hono JSX uses HTML attributes)
+- **TypeScript**: Strict mode enabled, auto-generated types from `bknd-types.d.ts` (never edit manually)
+- **Imports**: Relative paths, use `import type` for type-only imports
+- **Naming**: PascalCase components, camelCase props/functions, kebab-case CSS classes
+- **Commits**: Use conventional commits format
+- **Error handling**: API routes return `c.json({error: msg}, status)` for errors
 
-## Code style
+## Security & Secrets
 
-### Hono.jsx components
+- Never commit tokens or secrets
+- Configuration in `config.ts` (runtime) and `bknd.config.ts` (typegen proxy)
+- Database bindings via `wrangler.json` (D1: `bknd_nov_2025_d1`, R2: `bknd_nov_2025_r2`)
+- Use environment variables for sensitive values (configure in Cloudflare dashboard)
 
-- Always include `/** @jsxImportSource hono/jsx */` at the top of component files
-- Use `class` not `className` for HTML attributes
-- Import types from `hono/jsx`: `import type { FC } from 'hono/jsx'`
-- Components are functions that return JSX
-- Example pattern:
-```tsx
-/** @jsxImportSource hono/jsx */
-import type { FC } from 'hono/jsx'
+## JIT Index (what to open, not what to paste)
 
-export const Component: FC<{ prop: string }> = ({ prop }) => (
-  <div class="...">{prop}</div>
-)
-```
+### Source Structure
 
-### TypeScript
+- Routes & API: `src/index.tsx` → [see src/AGENTS.md](src/AGENTS.md)
+- Pages: `src/pages/` → [see src/AGENTS.md](src/AGENTS.md)
+- Components: `src/components/` → [see src/AGENTS.md](src/AGENTS.md)
+- Layouts: `src/layouts/` → [see src/AGENTS.md](src/AGENTS.md)
+- Styles: `src/styles/global.css` → [see src/AGENTS.md](src/AGENTS.md)
 
-- Strict mode enabled
-- JSX import source is `hono/jsx` (configured in tsconfig.json)
-- Type definitions auto-generated: `bknd-types.d.ts`, `worker-configuration.d.ts`, `index.d.ts`
-- Use `BkndEntity<"collection">` type for bknd data entities
+### Configuration Files
 
-### DataStar patterns
+- Runtime config: `config.ts`
+- Typegen config: `bknd.config.ts`
+- Worker config: `wrangler.json`
+- TypeScript: `tsconfig.json`
 
-- Use `data-on:submit`, `data-on:click` attributes for interactions
-- Format: `data-on:submit="@post('/route', {contentType: 'form'})"`
-- For SSE streams, use `ServerSentEventGenerator.stream()` in route handlers
-- Use `stream.patchElements()` for DOM updates
+### Quick Find Commands
 
-### Route definition
+- Find a component: `rg -n "export function .*" src/components src/pages`
+- Find a route handler: `rg -n "app\.server\.(get|post)" src/index.tsx`
+- Find DataStar usage: `rg -n "data-on:" src`
+- Find bknd API calls: `rg -n "api\.data\." src`
 
-- Routes defined in `src/index.tsx` inside `onBuilt` callback
-- Use `app.server.get()`, `app.server.post()`, etc.
-- Get bknd API instance: `const api = getBkndApi(app, c)`
-- Use `c.render()` with JSX component and metadata object
-- Use `c.html()` for full HTML responses
-- Use `c.json()` for JSON responses
+## Definition of Done
 
-## Build process
-
-1. **CSS**: Tailwind compiles `src/styles/global.css` → `dist/styles/global.css`
-2. **Assets**: `bun run bknd:copy-assets` copies admin assets to `dist/`
-3. **Types**: `bun run typegen` generates:
-   - Wrangler types (D1, R2 bindings)
-   - Bknd types (collections, entities)
-4. **Dev**: `predev` script runs asset copy + typegen before dev server
-
-## Important patterns
-
-### Config separation
-
-- `config.ts` - Main bknd config (imported by worker)
-- `bknd.config.ts` - Wrapped with `withPlatformProxy` for type generation
-- Never import `bknd.config.ts` in worker code (wrangler gets bundled)
-
-### Metadata hoisting
-
-- Layout wrapper uses Hono's metadata hoisting pattern
-- Set global renderer with `c.setRenderer()` in middleware
-- Pass `title` and `description` via `c.render()` metadata object
-
-### Component structure
-
-- `src/components/` - Reusable components
-- `src/layouts/` - Layout wrappers
-- `src/pages/` - Page components
-- Components use Tailwind + DaisyUI classes
-
-### DataStar attributes
-
-- Forms: `data-on:submit="@post('/route', {contentType: 'form'})"`
-- Buttons: `data-on:click="..."`
-- Elements need IDs for patching: `id="todos-list"`
-- Use `data-init="el.focus()"` for client-side initialization
-
-## File conventions
-
-- Components: `.tsx` files with Hono.jsx pragma
-- Config: `config.ts` for worker, `bknd.config.ts` for typegen
-- Styles: `src/styles/global.css` (Tailwind v4 with plugin syntax)
-- Output: `dist/` directory for built assets
-- Types: Auto-generated in root, don't edit manually
-
-## Testing
-
-No test suite currently configured. Add tests if needed.
-
-## Deployment
-
-- `bun run deploy` uses `wrangler deploy`
-- Assets in `dist/` are served via Cloudflare Workers
-- D1 database binding: `bknd_nov_2025_d1`
-- R2 bucket binding: `bknd_nov_2025_r2`
-- Admin UI available at `/admin` (from bknd)
-
-## Common gotchas
-
-- CSS must be built before deployment (included in dist/)
-- Type generation requires `PROXY=1` env var for bknd types
-- `bknd.config.ts` uses proxy wrapper, `config.ts` is the real config
-- Hono uses `class` not `className` in JSX
-- DataStar script loaded from CDN in Layout component
-- Route handlers must use `getBkndApi()` helper to access bknd API
-- SSE streams return `ServerSentEventGenerator.stream()` not regular responses
-
+Before PR:
+- [ ] Run `bun run typegen` (ensures types are up to date)
+- [ ] Run `bun run build:css` (ensures CSS compiles)
+- [ ] No TypeScript errors (`tsc --noEmit` equivalent via IDE)
+- [ ] Follows JSX pragma convention (`/** @jsxImportSource hono/jsx */`)
+- [ ] Uses `class` not `className` in JSX
