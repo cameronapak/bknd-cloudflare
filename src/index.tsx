@@ -61,7 +61,7 @@ export default serve({
       return ServerSentEventGenerator.stream(async (stream) => {        
         // Add new todo to the top of the list
         stream.patchElements((
-          <li id={`todo-${todo.id}`} class="flex items-center gap-2">
+          <li id={`todo-${todo.id}`} class="not-prose flex items-center gap-2"  >
             <input type="checkbox" class="checkbox checkbox-primary" />
             <span>{todo.title}</span>
           </li>
