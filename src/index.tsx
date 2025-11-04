@@ -85,5 +85,35 @@ export default serve({
         });
       });
     });
+
+    app.server.put("/todos/:id", async (c: Context) => {
+      const api = getBkndApi(app, c);
+      const id = c.req.param("id");
+
+      const body = await c.req.parseBody();
+      const completed = body.completed === "on" || body.completed === "true";
+      const todo = await api.data.updateOne("todos", id, {
+        completed_datetime: completed ? new Date() : undefined,
+      });
+
+      return ServerSentEventGenerator.stream(async (stream) => {
+        stream.patchElements(
+          (
+            <li id={`todo-${id}`} class="flex items-center gap-2">
+              <input
+                type="checkbox"
+                class="checkbox checkbox-primary"
+                checked={!!completed}
+              />
+              <span>{todo.title}</span>
+            </li>
+          ).toString(),
+          {
+            selector: `#todo-${id}`,
+            mode: "replace",
+          }
+        );
+      });
+    });
   },
 });

@@ -20,14 +20,18 @@ export function Home({ todos = [] }: { todos?: BkndEntity<"todos">[] | undefined
         </form>
         <ol id="todos-list">
           {!("error" in todos) && Array.isArray(todos) && (todos || [])?.map((todo) => (
-            <li key={todo.id} id={`todo-${todo.id}`} class="flex items-center gap-2">
-              <input
-                type="checkbox"
-                class="checkbox checkbox-primary"
-                checked={!!todo.completed_datetime}
-              />
-              <span>{todo.title}</span>
-            </li>
+            <form key={todo.id}>
+              <li id={`todo-${todo.id}`} class="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  name="completed"
+                  data-on:change={`@put('/todos/${todo.id}', {contentType: 'form'})`}
+                  class="checkbox checkbox-primary"
+                  checked={!!todo.completed_datetime}
+                />
+                <span>{todo.title}</span>
+              </li>
+            </form>
           ))}
         </ol>
         <a href="/admin" class="btn btn-primary">Admin</a>
